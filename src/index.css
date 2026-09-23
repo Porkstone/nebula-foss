@@ -1,0 +1,69 @@
+@import 'tailwindcss';
+
+:root {
+  color-scheme: dark;
+  --canvas: #040e12;
+  --surface: #08171c;
+  --reading: #071419;
+  --button: #0b2027;
+  --border: #1d3b44;
+  --selected: #0e3035;
+  --hover: #12353c;
+  --pressed: #0b292f;
+  --warning: #38291d;
+  --update: #103335;
+  --text: #dfebed;
+  --muted: #8ca6ae;
+  --guidance: #75d9d2;
+  --accent: #d08748;
+  --accent-text: #040e12;
+  --control-outline: #718a92;
+  --primary-outline: #d08748;
+  --error: #ffb4a4;
+  --backdrop: #040e12b3;
+  --font-ui: 'Segoe UI', sans-serif;
+  --font-code: 'Cascadia Mono', Consolas, monospace;
+  font-family: var(--font-ui);
+  color: var(--text);
+  background: var(--canvas);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+  line-height: 1.6;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --canvas: #f4f8f9;
+  --surface: #ffffff;
+  --reading: #ffffff;
+  --button: #e7eff2;
+  --border: #ccdde1;
+  --selected: #e1efee;
+  --hover: #dbe9ec;
+  --pressed: #cbdde1;
+  --warning: #fff1e3;
+  --update: #e1efee;
+  --text: #153039;
+  --muted: #506c76;
+  --guidance: #076d6c;
+  --primary-outline: #875323;
+  --error: #9a3120;
+  --backdrop: #15303980;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input, select, textarea { font: inherit; }
+button, a { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; color: inherit; border: 0; background: none; }
+button:disabled { opacity: .6; cursor: wait; }
+a { color: inherit; text-decoration: none; }
+:where(button, a, input, select, textarea):focus-visible { outline: 2px solid var(--guidance); outline-offset: 4px; }
+::selection { background: var(--selected); color: var(--guidance); }
+html { scroll-behavior: smooth; }
+h1, h2, h3, p { margin: 0; }
+input[type='checkbox'] { appearance: auto; accent-color: var(--guidance); width: 18px; height: 18px; flex-shrink: 0; }
+button svg, a svg { flex-shrink: 0; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; transition: none !important; }
+}

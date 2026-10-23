@@ -63,6 +63,14 @@ For production, configure the production callback URI and Google credentials on 
 
 Reference: [Convex Auth Google setup](https://labs.convex.dev/auth/config/oauth/google).
 
+## Privacy policy
+
+The public `/privacy` page describes account and Google sign-in data, public listing fields, local storage and sign-in cookies, service providers, retention, and privacy requests. It is linked from every site footer and from registration/sign-in before users submit information. The operator is **nebula.foss**, United Kingdom; privacy and account-deletion requests go to **charlie@hallville.net**.
+
+For Google OAuth branding, set the privacy policy URL to `https://<your-production-domain>/privacy` after the frontend is deployed. It must be publicly accessible on the same domain as the app homepage and match the link on the site. See [Google OAuth app branding requirements](https://support.google.com/cloud/answer/15549049).
+
+The policy follows the current implementation: listings can be removed in My projects, while account deletion is handled by contacting the operator. It does not promise automatic inactive-account deletion, a fixed backup purge deadline, or permissions beyond basic Google identity scopes. Update the policy date and wording when the actual data practices change.
+
 ## Authentication and passkeys
 
 The installed Convex Auth 0.0.95 package has no built-in passkey provider. Its official documentation lists passwords, OAuth, magic links and OTPs: https://labs.convex.dev/auth . Email/password is implemented; **passkeys are not enabled**. Enabling them requires changing auth integration (for example, to a supported Better Auth passkey integration) or a separately reviewed custom WebAuthn implementation.
@@ -91,4 +99,4 @@ Tests cover authentication/ownership boundaries, duplicate submissions, URL vali
 
 Google sign-in changes were pushed to the existing development deployment. Live checks verified password registration, authenticated sessions, sign-out/sign-in, and Google OAuth redirect/verifier issuance. Browser DOM checks verified the Google button in both account creation and sign-in. A full Google consent/callback round trip remains unverified until `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are configured.
 
-Implementation plans are in `docs/plans/repository-showcase.html`, `docs/plans/google-sign-in.html`, and `docs/plans/permissive-licences.html`.
+Implementation plans are in `docs/plans/repository-showcase.html`, `docs/plans/google-sign-in.html`, `docs/plans/permissive-licences.html`, and `docs/plans/privacy-policy.html`.

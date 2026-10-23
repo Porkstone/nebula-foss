@@ -4,8 +4,8 @@
 .brand-mark { color: var(--guidance); font-size: 36px; line-height: 1; }
 .brand-suffix { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 4px; }
 .site-header nav { display: flex; align-items: center; gap: 12px; font-size: 14px; flex-wrap: wrap; }
-.site-header nav > button:not(.button) { display: flex; align-items: center; gap: 8px; padding: 8px 12px; min-height: 40px; border-radius: 8px; }
-.site-header nav > button:not(.button):hover { background: var(--hover); }
+.site-header nav > :is(button, a):not(.button) { display: flex; align-items: center; gap: 8px; padding: 8px 12px; min-height: 40px; border-radius: 8px; }
+.site-header nav > :is(button, a):not(.button):hover { background: var(--hover); }
 .nav-active { color: var(--guidance); background: var(--selected); text-decoration: underline; text-underline-offset: 6px; }
 .theme-control { display: flex; gap: 8px; align-items: center; color: var(--muted); }
 .theme-control select { padding: 8px; min-height: 40px; font-size: 14px; border: 1px solid var(--control-outline); border-radius: 8px; color: var(--text); background: var(--button); }
@@ -124,6 +124,42 @@ form .check-label { display: flex; align-items: center; gap: 8px; font-weight: 4
 .manage-controls small { font-size: 12px; }
 .danger { color: var(--error); }
 .danger::before { content: '×'; font-size: 20px; }
+.inline-link { color: var(--guidance); text-decoration: underline; text-underline-offset: 3px; }
+.licence-page { max-width: 1248px; margin: auto; padding: 40px 24px 64px; }
+.licence-back { margin-bottom: 40px; }
+.licence-intro { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: end; padding-bottom: 56px; }
+.licence-intro h1 { font-size: clamp(36px, 4vw, 52px); margin: 20px 0 0; line-height: 1.16; letter-spacing: -1.2px; }
+.licence-intro-copy { padding-bottom: 4px; }
+.licence-intro-copy p { color: var(--muted); line-height: 1.8; font-size: 16px; margin-bottom: 20px; }
+.licence-section { border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 2fr; gap: 64px; padding-block: 40px; }
+.licence-section h2 { font-size: 25px; line-height: 1.3; letter-spacing: -.4px; margin: 12px 0 16px; scroll-margin-top: 24px; }
+.licence-section-label > p { color: var(--muted); font-size: 14px; line-height: 1.8; max-width: 280px; }
+.mit-recommendation { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 28px 32px; }
+.licence-recommendation-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
+.licence-mit-mark { color: var(--guidance); font: 700 36px/1.2 var(--font-code); letter-spacing: -1px; }
+.licence-recommended { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--guidance); padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; }
+.mit-recommendation p { color: var(--muted); font-size: 14px; line-height: 1.8; margin-bottom: 16px; }
+.mit-recommendation code, .licence-entry code { font-family: var(--font-code); color: var(--guidance); }
+.licence-list { margin: 0; }
+.licence-entry { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+.licence-entry:first-child { padding-top: 0; }
+.licence-entry:last-child { border: 0; padding-bottom: 0; }
+.licence-entry dt a { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; }
+.licence-entry dt a:hover { color: var(--guidance); text-decoration: underline; text-underline-offset: 4px; }
+.licence-entry code { display: block; margin-top: 4px; font-size: 12px; }
+.licence-entry dd { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.8; }
+.licence-checks > div { display: flex; gap: 16px; margin-bottom: 24px; }
+.licence-checks > div > svg { color: var(--guidance); flex-shrink: 0; margin-top: 3px; }
+.licence-checks h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.licence-checks p { font-size: 14px; color: var(--muted); line-height: 1.8; }
+.licence-source { border-top: 1px solid var(--border); padding-top: 24px; }
+.licence-source a { color: var(--guidance); text-decoration: underline; text-underline-offset: 3px; }
+.licence-source svg { display: inline; vertical-align: middle; }
+.licence-outro { border-top: 1px solid var(--border); display: flex; gap: 20px; align-items: center; padding-top: 32px; }
+.licence-outro > svg { color: var(--guidance); flex-shrink: 0; }
+.licence-outro p { color: var(--muted); font-size: 14px; }
+.licence-outro strong { color: var(--text); font-weight: 500; }
+.licence-outro > .button { margin-left: auto; }
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (max-width: 1248px) { .share-banner { margin-inline: 24px; } .brand-suffix { display: none; } }
@@ -135,11 +171,14 @@ form .check-label { display: flex; align-items: center; gap: 8px; font-weight: 4
   .share-banner { flex-wrap: wrap; }
   .share-banner > .button { margin-left: 0; }
   .section-number { display: none; }
+  .licence-intro { gap: 32px; }
+  .licence-section { grid-template-columns: 1fr 2.3fr; gap: 32px; }
+  .licence-entry { grid-template-columns: 180px 1fr; gap: 20px; }
 }
 @media (max-width: 700px) {
   .site-header { padding: 16px; align-items: flex-start; }
   .site-header nav { justify-content: flex-start; width: 100%; flex-basis: 100%; gap: 8px; }
-  .site-header nav > button:not(.button) { padding-inline: 8px; }
+  .site-header nav > :is(button, a):not(.button) { padding-inline: 8px; }
   .theme-control { margin-left: auto; }
   .site-header nav > .button { flex-basis: 100%; }
   .hero { padding: 32px 16px; display: block; }
@@ -164,4 +203,14 @@ form .check-label { display: flex; align-items: center; gap: 8px; font-weight: 4
   footer > .text-button { flex-basis: 100%; margin: 0; }
   dialog { padding: 24px; }
   .desktop-break { display: none; }
+  .licence-page { padding: 24px 16px 40px; }
+  .licence-back { margin-bottom: 24px; }
+  .licence-intro { grid-template-columns: 1fr; gap: 24px; padding-bottom: 32px; }
+  .licence-intro h1 { font-size: 36px; }
+  .licence-section { grid-template-columns: 1fr; gap: 16px; padding-block: 32px; }
+  .licence-section-label > p { max-width: none; }
+  .mit-recommendation { padding: 24px; }
+  .licence-entry { grid-template-columns: 1fr; gap: 8px; }
+  .licence-outro { flex-wrap: wrap; }
+  .licence-outro > .button { margin-left: 0; width: 100%; }
 }

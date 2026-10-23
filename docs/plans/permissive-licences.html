@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nebula · Permissive licence policy plan</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.7 'Segoe UI', sans-serif; color: #dfebed; background: #071419; }
+    body { max-width: 860px; margin: 48px auto; padding: 0 24px 48px; }
+    h1 { font-size: 36px; line-height: 1.2; letter-spacing: -.7px; } h2 { font-size: 22px; margin-top: 32px; }
+    .eyebrow, code { color: #75d9d2; } .eyebrow { letter-spacing: .12em; font-size: 12px; }
+    section { border-top: 1px solid #31515b; margin-top: 28px; } li { padding-block: 5px; }
+    aside { border-left: 3px solid #d08748; background: #0b2027; padding: 16px 24px; border-radius: 8px; }
+    code { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <p class="eyebrow">NEBULA / IMPLEMENTATION PLAN</p>
+  <h1>Open code, with room to build.</h1>
+  <p>Only showcase repositories whose GitHub-detected licence is MIT or one of the ten licences supplied by the site owner. Enforce the policy on the server and explain it before submission.</p>
+  <section><h2>One permitted set</h2><p><code>MIT, Unlicense, CC0-1.0, 0BSD, MIT-0, WTFPL, ISC, BSD-2-Clause, BSD-3-Clause, Zlib, BSL-1.0</code></p><aside>MIT is included as the requested baseline and recommended option. Apache-2.0 is removed because it is outside the specified list. Unknown, missing, custom, and unsupported licence identifiers are rejected.</aside></section>
+  <section><h2>Implementation</h2><ol>
+    <li>Share the exact allowlist across validation and the interface. Reject unsupported repository submissions with a clear explanation and an MIT recommendation. Keep private-repository errors distinct.</li>
+    <li>Enforce the same rule when storing and refreshing listings. Exclude older ineligible listings from browsing and search immediately, retain them in the owner's management view with an explanation, and bypass cached checks for ineligible stored licences.</li>
+    <li>Add a public <code>/licences</code> page with a focused editorial layout matching Nebula's themes. Explain the policy, recommend MIT, list every permitted licence with a source link, and explain how repository checks work.</li>
+    <li>Link the page from navigation, the footer, the mission dialog, and submission guidance. Add React Router and a Vercel rewrite so direct links and browser history work.</li>
+  </ol></section>
+  <section><h2>Verification</h2><p>Test every accepted identifier, missing/unsupported licences, submission rejection without persistence, legacy listing visibility, and refresh behaviour. Run typecheck, tests, lint, and build. Push the backend to personal development deployment <code>fearless-crow-586</code> and inspect desktop/mobile page navigation and submission feedback.</p></section>
+  <section><h2>Clarifications</h2><p>No clarification is required to proceed. This list is Nebula's editorial eligibility policy; the page will describe licence differences without claiming that their legal terms are identical.</p></section>
+</body>
+</html>

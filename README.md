@@ -28,7 +28,13 @@ On a new deployment, configure `JWT_PRIVATE_KEY`, `JWKS`, and `SITE_URL` using `
 
 ## License policy
 
-Accepted SPDX identifiers: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD, Unlicense, CC0-1.0. This is a permissive-license product allowlist, not legal equivalence. Unknown/custom licenses and copyleft licenses are rejected. GitHub license detection may be incomplete; a repository must have a license recognized by the API.
+Nebula only showcases projects with one of these GitHub-detected SPDX identifiers: MIT, Unlicense, CC0-1.0, 0BSD, MIT-0, WTFPL, ISC, BSD-2-Clause, BSD-3-Clause, Zlib, BSL-1.0. **MIT is recommended.** Apache-2.0 is outside the permitted set. Missing, unknown, custom, and unsupported licences are rejected with an explanation and an MIT recommendation.
+
+The public `/licences` page explains the policy, every permitted licence, and how repository checks work. It is linked from navigation, the footer, and submission guidance. React Router handles the page and browser history; Vercel rewrites direct page requests to the app entry point.
+
+The same shared allowlist is enforced on submission and insertion, when refreshing metadata, and before paginating public browsing/search results. Legacy unsupported listings are excluded immediately and remain visible to their submitter with the rejection reason. Refreshes bypass old ETags for unsupported licences, so a `304 Not Modified` response cannot preserve eligibility under an outdated policy. Daily checks can restore a listing once a permitted licence is detected.
+
+This is Nebula's editorial allowlist, not a claim that these licences have identical legal terms. GitHub licence detection may be incomplete; a repository must have a licence recognised by the API. Only the repository's detected licence is checked, not dependency licences. References: [GitHub licence detection](https://docs.github.com/en/rest/licenses/licenses#about-licenses), [SPDX licence list](https://spdx.org/licenses/).
 
 ## GitHub API research
 
@@ -81,8 +87,8 @@ pnpm build
 pnpm lint
 ```
 
-Tests cover authentication/ownership boundaries, duplicate submissions, URL validation, license rejection, refresh data preservation, hidden listings, ETags and rate-limit responses. `node scripts/smoke.mjs` exercises actual registration, GitHub submission, metadata persistence, editing, sign-out/sign-in and listing removal on the named development deployment. It leaves a disposable test account but removes its test listing; passwords and session tokens are never printed or persisted.
+Tests cover authentication/ownership boundaries, duplicate submissions, URL validation, every permitted licence, unsupported/missing licence rejection, legacy listing visibility, refresh data preservation, hidden listings, ETags and rate-limit responses. `node scripts/smoke.mjs` exercises actual registration, unsupported-licence rejection with an MIT recommendation, permitted GitHub submission, metadata persistence, editing, sign-out/sign-in and listing removal on the named development deployment. It leaves a disposable test account but removes its test listing; passwords and session tokens are never printed or persisted.
 
-Google sign-in changes were pushed to the existing development deployment. TypeScript checks, all eight existing tests, lint, and the production build pass. Live checks also verified password registration, authenticated sessions, sign-out/sign-in, and Google OAuth redirect/verifier issuance. Browser DOM checks verified the Google button in both account creation and sign-in. A full Google consent/callback round trip remains unverified until `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are configured.
+Google sign-in changes were pushed to the existing development deployment. Live checks verified password registration, authenticated sessions, sign-out/sign-in, and Google OAuth redirect/verifier issuance. Browser DOM checks verified the Google button in both account creation and sign-in. A full Google consent/callback round trip remains unverified until `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are configured.
 
-Implementation plans are in `docs/plans/repository-showcase.html` and `docs/plans/google-sign-in.html`.
+Implementation plans are in `docs/plans/repository-showcase.html`, `docs/plans/google-sign-in.html`, and `docs/plans/permissive-licences.html`.

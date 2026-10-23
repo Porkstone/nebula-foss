@@ -1,5 +1,13 @@
 export const categories = ['Developer tools', 'Web & frontend', 'AI & machine learning', 'Productivity', 'Data & analytics', 'Infrastructure', 'Design', 'Other'] as const;
-export const licenses = ['MIT', 'Apache-2.0', 'BSD-2-Clause', 'BSD-3-Clause', 'ISC', '0BSD', 'Unlicense', 'CC0-1.0'];
+export const licenses = ['MIT', 'Unlicense', 'CC0-1.0', '0BSD', 'MIT-0', 'WTFPL', 'ISC', 'BSD-2-Clause', 'BSD-3-Clause', 'Zlib', 'BSL-1.0'] as const;
+export type PermittedLicense = typeof licenses[number];
+export const licensePolicyMessage = 'Nebula only accepts projects with a permitted permissive licence. We recommend the MIT licence. If you maintain this repository, add an MIT LICENSE file or another permitted licence, wait for GitHub to recognise it, and try again.';
+export function isPermittedLicense(license: unknown): license is PermittedLicense {
+  return licenses.some(permitted => permitted === license);
+}
+export function validateLicense(license: unknown) {
+  if (!isPermittedLicense(license)) throw new Error(licensePolicyMessage);
+}
 export function parseRepository(input: string) {
   const value = input.trim().replace(/\.git\/?$/, '').replace(/\/$/, '');
   const match = /^(?:https:\/\/github\.com\/)?([a-zA-Z0-9-]+)\/([a-zA-Z0-9_.-]+)$/.exec(value);

@@ -4,7 +4,7 @@ import { action, internalAction } from './_generated/server';
 import { internal } from './_generated/api';
 import { details } from './schema';
 import type { Id } from './_generated/dataModel';
-import { licenses, parseRepository, validateDetails } from './lib/policy';
+import { isPermittedLicense, licensePolicyMessage, parseRepository, validateDetails } from './lib/policy';
 class GitHubError extends Error { retryMs: number; unavailable: boolean; constructor(message: string, retryMs = 0, unavailable = false) { super(message); this.retryMs = retryMs; this.unavailable = unavailable; } }
 export async function fetchRepository(name: string, etag?: string) {
   const headers: Record<string, string> = { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'Nebula-Open-Source-Directory' };
@@ -30,7 +30,8 @@ export async function fetchRepository(name: string, etag?: string) {
   if (response.status === 404 || response.status === 451) throw new GitHubError('Repository is unavailable or no longer public.', 0, true);
   if (!response.ok) throw new GitHubError('GitHub is temporarily unavailable.', 60000);
   const repo = await response.json();
-  if (repo.private || !licenses.includes(repo.license?.spdx_id)) throw new GitHubError('This repository needs a recognized permissive license (MIT, Apache-2.0, BSD, ISC, 0BSD, Unlicense or CC0-1.0).', 0, true);
+  if (repo.private) throw new GitHubError('Only public GitHub repositories can be showcased on Nebula.', 0, true);
+  if (!isPermittedLicense(repo.license?.spdx_id)) throw new GitHubError(licensePolicyMessage, 0, true);
   if (!Number.isInteger(repo.id) || typeof repo.full_name !== 'string' || typeof repo.stargazers_count !== 'number') throw new Error('Unexpected GitHub response.');
   return { githubId: repo.id as number, fullName: repo.full_name as string, stars: repo.stargazers_count as number, forks: repo.forks_count as number, language: (repo.language || 'Other') as string, license: repo.license.spdx_id as string, archived: Boolean(repo.archived), pushedAt: (repo.pushed_at || '') as string, etag: response.headers.get('etag') || '' };
 }
@@ -55,7 +56,8 @@ export const refresh = internalAction({ args: { before: v.optional(v.number()), 
   const project = await ctx.runQuery(internal.projects.nextDue, {before}); if (!project) return null;
   let delay = process.env.GITHUB_TOKEN ? 1500 : 65000;
   try {
-    const data = await fetchRepository(project.fullName, project.visible ? project.etag : undefined);
+    // A cached response cannot revalidate a licence removed from our permitted set.
+    const data = await fetchRepository(project.fullName, project.visible && isPermittedLicense(project.license) ? project.etag : undefined);
     if (data && data.githubId !== project.githubId) throw new GitHubError('The repository at this URL has changed identity. Please submit its new canonical URL.', 0, true);
     await ctx.runMutation(internal.projects.refreshed, {id: project._id, ...(data ? {data, visible: true} : {})});
   } catch (error) {

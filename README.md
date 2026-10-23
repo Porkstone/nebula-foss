@@ -71,6 +71,12 @@ For Google OAuth branding, set the privacy policy URL to `https://<your-producti
 
 The policy follows the current implementation: listings can be removed in My projects, while account deletion is handled by contacting the operator. It does not promise automatic inactive-account deletion, a fixed backup purge deadline, or permissions beyond basic Google identity scopes. Update the policy date and wording when the actual data practices change.
 
+## Terms of Service
+
+The public `/terms` page covers account responsibilities, project eligibility, the shared permitted licence set, rights in submitted content, acceptable use, moderation, external projects, service availability, account closure, and statutory rights. It is linked from every footer and from the visible terms/privacy notice before account creation or sign-in. Both legal pages use the operator details in `src/siteOperator.ts`.
+
+For Google OAuth branding, set the Terms of Service URL to `https://<your-production-domain>/terms` after the frontend is deployed. The privacy policy URL remains `https://<your-production-domain>/privacy`. The account notice does not record a versioned acceptance event; no backend consent-recording flow was added.
+
 ## Authentication and passkeys
 
 The installed Convex Auth 0.0.95 package has no built-in passkey provider. Its official documentation lists passwords, OAuth, magic links and OTPs: https://labs.convex.dev/auth . Email/password is implemented; **passkeys are not enabled**. Enabling them requires changing auth integration (for example, to a supported Better Auth passkey integration) or a separately reviewed custom WebAuthn implementation.
@@ -99,4 +105,4 @@ Tests cover authentication/ownership boundaries, duplicate submissions, URL vali
 
 Google sign-in changes were pushed to the existing development deployment. Live checks verified password registration, authenticated sessions, sign-out/sign-in, and Google OAuth redirect/verifier issuance. Browser DOM checks verified the Google button in both account creation and sign-in. A full Google consent/callback round trip remains unverified until `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are configured.
 
-Implementation plans are in `docs/plans/repository-showcase.html`, `docs/plans/google-sign-in.html`, `docs/plans/permissive-licences.html`, and `docs/plans/privacy-policy.html`.
+Implementation plans are in `docs/plans/repository-showcase.html`, `docs/plans/google-sign-in.html`, `docs/plans/permissive-licences.html`, `docs/plans/privacy-policy.html`, and `docs/plans/terms-of-service.html`.

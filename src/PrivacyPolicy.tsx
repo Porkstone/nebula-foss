@@ -1,11 +1,6 @@
 import { ArrowLeft, ArrowUpRight, Database, Eye, LockKeyhole, Mail, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const privacyContact = {
-  operator: 'nebula.foss',
-  country: 'United Kingdom',
-  email: 'charlie@hallville.net',
-};
+import { siteOperator as privacyContact } from './siteOperator';
 
 const sections = [
   ['privacy-operator', 'Who operates Nebula'],

@@ -18,9 +18,58 @@ function Modal({ children, close, title }: {children: ReactNode; close: () => vo
 const errorText = (error: unknown) => error instanceof ConvexError && typeof error.data === 'object' && error.data !== null && 'message' in error.data ? String(error.data.message) : error instanceof Error ? error.message.replace(/^.*Uncaught (?:ConvexError|Error): /s, '').replace(/\n\s+at[\s\S]*/, '') : 'Something went wrong. Please try again.';
 
 function AuthForm({close}: {close: () => void}) {
-  const {signIn} = useAuthActions(); const [signup, setSignup] = useState(true); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
-  async function submit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); setBusy(true); setError(''); const data = new FormData(e.currentTarget); data.set('flow', signup ? 'signUp' : 'signIn'); try { await signIn('password', data); close(); } catch { setError(signup ? 'Unable to create your account. The email may already be registered.' : 'Sign-in failed. Check your email and password.'); } finally {setBusy(false);} }
-  return <Modal title={signup ? 'Create your account' : 'Sign in to Nebula'} close={close}><p className="muted">{signup ? 'Join Nebula to share useful projects with curious people.' : 'Sign in to manage your open-source projects.'}</p><form onSubmit={submit}><label>Email address<input name="email" type="email" required autoComplete="email" placeholder="you@example.com" maxLength={254}/></label><label>Password<input name="password" type="password" required minLength={12} autoComplete={signup ? 'new-password' : 'current-password'} placeholder="At least 12 characters"/></label>{error && <p role="alert" className="error">{error}</p>}<button className="button primary full" disabled={busy}>{busy ? <Loader2 className="spin" size={18}/> : signup ? 'Create your account' : 'Sign in'}<ArrowRight size={17}/></button></form><p className="form-footer">{signup ? 'Already part of the universe?' : 'New to Nebula?'} <button className="text-button" onClick={() => {setSignup(!signup); setError('');}}>{signup ? 'Sign in' : 'Create an account'}</button></p></Modal>;
+  const {signIn} = useAuthActions();
+  const [signup, setSignup] = useState(true);
+  const [pending, setPending] = useState<'google' | 'password' | null>(null);
+  const [error, setError] = useState('');
+  const busy = pending !== null;
+
+  async function continueWithGoogle() {
+    if (busy) return;
+    setPending('google');
+    setError('');
+    try {
+      const result = await signIn('google');
+      if (result.signingIn) close();
+      if (!result.redirect) setPending(null);
+    } catch {
+      setError('Unable to connect to Google. Please try again or use your email and password.');
+      setPending(null);
+    }
+  }
+
+  async function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (busy) return;
+    setPending('password');
+    setError('');
+    const data = new FormData(e.currentTarget);
+    data.set('flow', signup ? 'signUp' : 'signIn');
+    try {
+      await signIn('password', data);
+      close();
+    } catch {
+      setError(signup ? 'Unable to create your account. The email may already be registered.' : 'Sign-in failed. Check your email and password.');
+    } finally {
+      setPending(null);
+    }
+  }
+
+  return <Modal title={signup ? 'Create your account' : 'Sign in to Nebula'} close={close}>
+    <p className="muted">{signup ? 'Join Nebula to share useful projects with curious people.' : 'Sign in to manage your open-source projects.'}</p>
+    <button type="button" className="button full" onClick={() => void continueWithGoogle()} disabled={busy}>
+      {pending === 'google' ? <Loader2 className="spin" size={18} aria-hidden="true"/> : <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.9-1.75 2.98-4.33 2.98-7.36Z"/><path fill="#34A853" d="M12 22c2.7 0 4.96-.9 6.62-2.41l-3.24-2.51c-.9.6-2.05.97-3.38.97-2.6 0-4.81-1.76-5.6-4.12H3.06v2.59A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.4 13.93A6 6 0 0 1 6.09 12c0-.67.11-1.32.31-1.93V7.48H3.06A10 10 0 0 0 2 12c0 1.61.39 3.14 1.06 4.52l3.34-2.59Z"/><path fill="#EA4335" d="M12 5.95c1.47 0 2.79.51 3.82 1.51l2.86-2.86A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.94 5.48l3.34 2.59c.79-2.36 3-4.12 5.6-4.12Z"/></svg>}
+      {pending === 'google' ? 'Connecting to Google…' : 'Continue with Google'}
+    </button>
+    <div className="auth-divider">or continue with email</div>
+    {error && <p role="alert" className="error">{error}</p>}
+    <form onSubmit={submit}>
+      <label>Email address<input name="email" type="email" required disabled={busy} autoComplete="email" placeholder="you@example.com" maxLength={254}/></label>
+      <label>Password<input name="password" type="password" required disabled={busy} minLength={12} autoComplete={signup ? 'new-password' : 'current-password'} placeholder="At least 12 characters"/></label>
+      <button className="button primary full" disabled={busy}>{pending === 'password' ? <Loader2 className="spin" size={18}/> : signup ? 'Create your account' : 'Sign in'}<ArrowRight size={17}/></button>
+    </form>
+    <p className="form-footer">{signup ? 'Already part of the universe?' : 'New to Nebula?'} <button className="text-button" disabled={busy} onClick={() => {setSignup(!signup); setError('');}}>{signup ? 'Sign in' : 'Create an account'}</button></p>
+  </Modal>;
 }
 
 function ProjectForm({project, close, done}: {project?: Doc<'projects'>; close: () => void; done: (message: string) => void}) {

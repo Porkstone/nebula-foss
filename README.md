@@ -17,7 +17,8 @@ On a new deployment, configure `JWT_PRIVATE_KEY`, `JWKS`, and `SITE_URL` using `
 ## Features
 
 - Public directory with paginated browsing, category filters, full-text search, contribution/maintenance filters, and newest/star sorting. Text searches use relevance ordering.
-- Email/password registration and sign-in through `@convex-dev/auth` (minimum 12-character passwords).
+- Google account registration and sign-in through `@convex-dev/auth` (requires Google OAuth configuration below).
+- Email/password registration and sign-in (minimum 12-character passwords).
 - Authenticated submissions of any eligible public GitHub repository. Submitting a listing does not assert repository ownership or affiliation.
 - Server-side URL, license, category, description, duplicate-repository and ownership checks.
 - Personal listing management, including edit and remove. Maximum 100 listings per account.
@@ -40,6 +41,22 @@ GitHub provides `GET /repos/{owner}/{repo}` for repository metadata, including l
 
 Unauthenticated requests generally allow 60 requests/hour per source IP; token-authenticated requests generally allow 5,000/hour. Set a dedicated read-only `GITHUB_TOKEN` **on the Convex deployment**, never as a `VITE_` variable. Public-repository access is sufficient. Without a token, refreshes are spaced 65 seconds apart and share the unauthenticated allowance with submissions and potentially other traffic. A token is strongly recommended before launch and required for larger daily catalogs. Successful authenticated conditional responses can avoid primary quota charges. Retry-After and reset headers are respected; transient failures back off.
 
+## Google sign-in
+
+Both account creation and sign-in offer **Continue with Google**. Convex Auth creates a user on the first successful Google sign-in and restores that account on subsequent sign-ins. Existing email/password accounts continue to work. Accounts are not merged merely because they share an unverified email address; Convex Auth only automatically links matching verified email identities.
+
+Configure a Google OAuth client before using this option:
+
+1. In the [Google Auth Platform](https://console.cloud.google.com/auth/overview), select a project and configure the app branding and audience. Choose **External** for a public app; add test users while the app is in testing mode.
+2. Create an OAuth client of type **Web application**. Add `http://localhost:5173` as an authorized JavaScript origin for local development.
+3. Add this exact authorized redirect URI for the existing development backend: `https://fearless-crow-586.convex.site/api/auth/callback/google`. For another deployment, use its HTTP Actions URL (`https://<deployment>.convex.site`) followed by `/api/auth/callback/google`.
+4. In that deployment's **Convex dashboard → Settings → Environment Variables**, set `AUTH_GOOGLE_ID` to the client ID and `AUTH_GOOGLE_SECRET` to the client secret. Keep both on the backend; never put the secret in a `VITE_` variable or commit it. Set `SITE_URL` to the frontend URL (`http://localhost:5173` in development).
+5. Deploy the updated backend, open Nebula, and select **Continue with Google**. Verify a new Google user can register, sign out, and sign back into the same account and its projects.
+
+For production, configure the production callback URI and Google credentials on the production Convex deployment, and set its `SITE_URL` to the production frontend URL. Configure the Google audience for public access when ready to launch. Do not regenerate the existing auth signing keys to add Google.
+
+Reference: [Convex Auth Google setup](https://labs.convex.dev/auth/config/oauth/google).
+
 ## Authentication and passkeys
 
 The installed Convex Auth 0.0.95 package has no built-in passkey provider. Its official documentation lists passwords, OAuth, magic links and OTPs: https://labs.convex.dev/auth . Email/password is implemented; **passkeys are not enabled**. Enabling them requires changing auth integration (for example, to a supported Better Auth passkey integration) or a separately reviewed custom WebAuthn implementation.
@@ -51,7 +68,7 @@ Email verification and password recovery are not yet configured. Before public l
 `vercel.json` selects `pnpm run build:vercel`, which runs Convex deployment, then builds the frontend with the correct `VITE_CONVEX_URL` injected.
 
 1. Create a **Convex production deploy key** and add it to Vercel as `CONVEX_DEPLOY_KEY` (scope production and preview credentials appropriately).
-2. Configure production auth signing keys and `SITE_URL` on the target Convex deployment.
+2. Configure production auth signing keys, `SITE_URL`, `AUTH_GOOGLE_ID`, and `AUTH_GOOGLE_SECRET` on the target Convex deployment, and register its Google callback URI as described above.
 3. Add the server-side GitHub token to that Convex deployment.
 4. Use the provided Vercel build command. The output directory is `dist`.
 
@@ -66,6 +83,6 @@ pnpm lint
 
 Tests cover authentication/ownership boundaries, duplicate submissions, URL validation, license rejection, refresh data preservation, hidden listings, ETags and rate-limit responses. `node scripts/smoke.mjs` exercises actual registration, GitHub submission, metadata persistence, editing, sign-out/sign-in and listing removal on the named development deployment. It leaves a disposable test account but removes its test listing; passwords and session tokens are never printed or persisted.
 
-Browser visual verification was unavailable because no browser was connected to the computer-use tool.
+Google sign-in changes were pushed to the existing development deployment. TypeScript checks, all eight existing tests, lint, and the production build pass. Live checks also verified password registration, authenticated sessions, sign-out/sign-in, and Google OAuth redirect/verifier issuance. Browser DOM checks verified the Google button in both account creation and sign-in. A full Google consent/callback round trip remains unverified until `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are configured.
 
-The implementation plan is in `docs/plans/repository-showcase.html`.
+Implementation plans are in `docs/plans/repository-showcase.html` and `docs/plans/google-sign-in.html`.

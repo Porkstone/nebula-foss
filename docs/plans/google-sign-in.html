@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Google sign-in implementation plan · Nebula</title>
+  <style>
+    :root { color-scheme: light dark; font: 16px/1.65 system-ui, sans-serif; color: #dfebed; background: #071419; }
+    body { max-width: 800px; margin: 48px auto; padding: 0 24px 40px; }
+    h1 { line-height: 1.2; font-size: 36px; } h2 { font-size: 21px; margin-top: 32px; }
+    .eyebrow { color: #75d9d2; font-size: 12px; letter-spacing: .12em; }
+    section { border-top: 1px solid #31515b; margin-top: 28px; }
+    li { padding: 5px 0; } code { color: #75d9d2; overflow-wrap: anywhere; }
+    aside { padding: 20px; border: 1px solid #718a92; border-radius: 10px; background: #0b2027; }
+  </style>
+</head>
+<body>
+  <p class="eyebrow">NEBULA / IMPLEMENTATION PLAN</p>
+  <h1>Create an account and sign in with Google</h1>
+  <p>Add Google OAuth to the existing Convex Auth integration. A first Google sign-in creates an account; later sign-ins use that Google account. Preserve email/password authentication and existing project ownership.</p>
+  <section><h2>Implementation</h2><ol>
+    <li>Register the Auth.js Google provider alongside the existing Password provider. Keep the existing auth tables, JWT configuration, and HTTP callback routes.</li>
+    <li>Add a keyboard-accessible “Continue with Google” button to both account creation and sign-in. Show progress, prevent competing submissions, and report initiation failures. Let Convex Auth handle the OAuth redirect and session exchange.</li>
+    <li>Document Google Cloud configuration, the deployment-specific callback URL, server-only credentials, and production setup.</li>
+  </ol></section>
+  <section><h2>Verification</h2><p>Run TypeScript checks, existing tests, lint, and the production build. Push to the existing development deployment and inspect both authentication screens in the browser. Complete a real Google round trip once the OAuth client is configured.</p></section>
+  <section><h2>Configuration dependency</h2><aside>The development deployment is <code>fearless-crow-586</code>. Google credentials are not configured. Its authorized redirect URI is <code>https://fearless-crow-586.convex.site/api/auth/callback/google</code>. Configure <code>AUTH_GOOGLE_ID</code> and <code>AUTH_GOOGLE_SECRET</code> in the Convex dashboard. Existing signing keys must stay in place.</aside></section>
+  <section><h2>Questions</h2><p>No product clarification is needed. A Google OAuth client must be configured before a real account can complete sign-in.</p></section>
+</body>
+</html>

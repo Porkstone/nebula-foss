@@ -1,3 +1,14 @@
 import { convexAuth } from '@convex-dev/auth/server';
 import { Password } from '@convex-dev/auth/providers/Password';
-export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({ providers: [Password({ validatePasswordRequirements(password) { if (password.length < 12) throw new Error('Use at least 12 characters for your password.'); } })] });
+import Google from '@auth/core/providers/google';
+
+export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
+  providers: [
+    Google,
+    Password({
+      validatePasswordRequirements(password) {
+        if (password.length < 12) throw new Error('Use at least 12 characters for your password.');
+      },
+    }),
+  ],
+});

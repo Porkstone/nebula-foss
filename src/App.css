@@ -112,6 +112,8 @@ form input:not([type='checkbox']), form select, textarea { width: 100%; border: 
 textarea { resize: vertical; }
 form .check-label { display: flex; align-items: center; gap: 8px; font-weight: 400; }
 .full { width: 100%; }
+.auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--muted); font-size: 12px; }
+.auth-divider::before, .auth-divider::after { content: ''; height: 1px; flex: 1; background: var(--border); }
 .error { color: var(--error); font-size: 14px; overflow-wrap: anywhere; background: var(--warning); border-radius: 8px; padding: 12px; }
 .error::before { content: '⚠ '; }
 .form-footer { font-size: 14px; text-align: center; margin-top: 24px; margin-bottom: 0; }

@@ -23,6 +23,7 @@
 h1 { font-size: 36px; line-height: 1.25; font-weight: 700; letter-spacing: -.7px; margin: 20px 0; }
 h1 span { color: var(--guidance); }
 .hero-copy > p { font-size: 16px; color: var(--muted); line-height: 1.75; max-width: 520px; }
+.hero-copy > .hero-licence-note { margin-top: 16px; font-size: 14px; }
 .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; margin-top: 24px; }
 .text-button { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; min-height: 32px; color: var(--guidance); }
 .text-button:hover { text-decoration: underline; text-underline-offset: 4px; }

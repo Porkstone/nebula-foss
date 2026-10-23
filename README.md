@@ -10,13 +10,14 @@ pnpm exec convex dev
 pnpm dev
 ```
 
-The existing development backend is `fearless-crow-586`. The frontend runs at http://localhost:5173. Registration and sign-in have been verified against that backend. No production deployment was performed.
+The frontend runs at http://localhost:5173. The historical development backend is `fearless-crow-586`, but current testing and deployment target **production only**, `careful-wombat-946` at https://www.foss.codes. Do not use the development commands above for the current production workflow; unit tests run in memory without a cloud deployment.
 
 On a new deployment, configure `JWT_PRIVATE_KEY`, `JWKS`, and `SITE_URL` using `node scripts/setup-auth.mjs https://your-site.example`. This script generates signing material without printing it. Run it only for initial configuration or intentional key rotation: rotation invalidates existing sessions. The development deployment is already configured.
 
 ## Features
 
 - Public directory with paginated browsing, category filters, full-text search, contribution/maintenance filters, and newest/star sorting. Text searches use relevance ordering.
+- Public GET JSON API, agent instructions, OpenAPI schema, and shareable browser search/filter URLs (see Agent discovery below).
 - Google account registration and sign-in through `@convex-dev/auth` (requires Google OAuth configuration below).
 - Email/password registration and sign-in (minimum 12-character passwords).
 - Authenticated submissions of any eligible public GitHub repository. Submitting a listing does not assert repository ownership or affiliation.
@@ -25,6 +26,25 @@ On a new deployment, configure `JWT_PRIVATE_KEY`, `JWKS`, and `SITE_URL` using `
 - Daily GitHub metadata refresh at **03:17 UTC** with serial scheduled requests, ETags, conditional requests, bounded retries and rate-limit backoff.
 - User-authored descriptions and flags are preserved. GitHub archive state is displayed separately. Private, missing or ineligible repositories are hidden; submitters can see refresh errors.
 - The directory starts empty. No invented projects or fabricated GitHub statistics are displayed.
+
+## Agent discovery
+
+Production is served at **https://www.foss.codes**, backed by **careful-wombat-946**. Current testing and deployments use production only; the historical development setup above is not the deployment target.
+
+- `/api/v1/projects`: public, read-only GET JSON search. No authentication or JavaScript required.
+- `/llms.txt`: plain-text agent instructions, examples, filter values and interpretation guidance.
+- `/openapi.json`: OpenAPI 3.1 schema.
+- `/agents`: linked guide for agent users; also discoverable from the search area and footer.
+
+Example: `https://www.foss.codes/api/v1/projects?q=tool&contributions=true&limit=10`.
+
+Optional parameters: `q` (up to 200 characters), `category` (exact directory category), `contributions` and `maintained` (`true`/`false`), `sort` (`stars`/`newest`), `limit` (1–50, default 20), `cursor`. Text searches use relevance order. Other parameters and invalid values return JSON 400 errors. Search is for repository names and descriptions in submitted Nebula listings, not all of GitHub or semantic prompt matching.
+
+Responses whitelist public project details and omit user IDs, email, internal IDs, ETags and refresh diagnostics. Visibility and the existing licence allowlist are enforced by the same query used by the website. Follow `pagination.next` while `hasMore` is true, including after empty partial pages. Do not change filters between pages. HTTP requests limit pagination scans to 500 rows / 2 MB; search failures return JSON 503. This API does not call GitHub or consume its token quota.
+
+Browser searches use the same `q`, `category`, `contributions`, `maintained` and `sort` parameters, such as `https://www.foss.codes/?q=tool&contributions=true#explore`. Filters survive reloads and history navigation; text search explicitly shows relevance ordering. Search typing replaces the current history entry; filter changes create entries. Unknown browser category/sort values fall back to defaults.
+
+Vercel proxies `/api/v1/*` to the production Convex HTTP Actions domain **before** the SPA fallback. Keep this destination aligned with the production deployment when changing environments. `build:vercel` continues deploying Convex before building the frontend; maintain the production `CONVEX_DEPLOY_KEY` in Vercel. Local unit tests use `convex-test`, without contacting a cloud backend.
 
 ## License policy
 

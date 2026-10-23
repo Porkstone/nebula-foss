@@ -52,6 +52,16 @@ h1 span { color: var(--guidance); }
 .search-box:focus-within { outline: 2px solid var(--guidance); outline-offset: 4px; }
 input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .search-box kbd { font: 12px var(--font-code); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+.search-help { font-size: 13px; color: var(--muted); margin-top: 12px; line-height: 1.7; }
+.agent-resources { display: flex; flex-wrap: wrap; gap: 12px 24px; }
+.agent-content { min-width: 0; }
+.agent-content p { color: var(--muted); font-size: 14px; line-height: 1.85; margin-bottom: 20px; }
+.agent-content > a { margin-bottom: 20px; }
+.agent-content code { font: .9em var(--font-code); color: var(--guidance); overflow-wrap: anywhere; }
+.agent-content pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 24px; background: var(--reading); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; margin-bottom: 24px; line-height: 1.8; }
+.agent-parameters > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.agent-parameters { margin-bottom: 24px; }
+.agent-parameters dd { margin: 0; color: var(--muted); line-height: 1.7; }
 .sort-control { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
 .sort-control select { padding: 12px; background: var(--button); color: var(--text); border: 1px solid var(--control-outline); border-radius: 8px; font-size: 14px; }
 .categories { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 24px; }

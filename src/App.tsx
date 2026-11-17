@@ -133,7 +133,7 @@ export default function App() {
   const projects = mine ? own ?? [] : results;
   const add = () => {setEditing(undefined); setModal(isAuthenticated ? 'submit' : 'auth');};
   return <><header className="site-header">
-    <Link className="brand" to="/" aria-label="Nebula home" onClick={() => setMine(false)}><span className="brand-mark">✳</span>nebula<span className="brand-suffix">/ open source</span></Link>
+    <Link className="brand" to="/" aria-label="foss home" onClick={() => setMine(false)}><span className="brand-mark">✳</span>foss<span className="brand-suffix">/ free open source software</span></Link>
     <nav aria-label="Main navigation">
       <Link to="/#explore" className={location.pathname === '/' && !mine ? 'nav-active' : ''} onClick={() => {setMine(false); document.getElementById('explore')?.scrollIntoView({behavior: 'smooth'});}}>Explore</Link>
       <button onClick={() => setModal('about')}>The mission <ArrowUpRight size={13}/></button>
